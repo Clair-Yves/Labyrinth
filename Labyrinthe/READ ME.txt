@@ -1,0 +1,5 @@
+Launch file Labyrinthe.py to play a game
+
+Modules architecture (import order) : Labyrinthe -> FrontEnd -> BackEnd -> Storage
+
+Thank you very much for your review =)
