@@ -7,55 +7,43 @@ Created on Mon Jan 21 08:31:21 2019
 
 import BackEnd as BE
 
-class Fin:
-    def __init__(self):
-        self._fin=False
+def nextMvt(inputJoueur):
+    '''Takes the string input and returns a mvt tuple if the input is valid,
+     return False if not'''
+    if validInput(inputJoueur):
+        if len(inputJoueur)==1:
+            inputJoueur+="1" # if input is either N,S,W or E we continue with an N1, S1, W1 or E1 ofr the rest of the code
+        try:
+            int(inputJoueur[1:])
+            return (inputJoueur[0].upper(),int(inputJoueur[1:]))
+        except ValueError:
+            return (inputJoueur[0].upper(),inputJoueur[1].upper())
+    else:
+        return False
 
-    def getFin(self):
-        return self._fin
 
-    def setFin(self,newFin):
-        self._fin=newFin
-
-    fin=property(getFin,setFin)
-
-Fin=Fin()
-
-
-def nextMvt(nomJoueur,labi):
-    '''Demande au joueur son prochain mvt
-    Test la validité de l'input via la fct validInput de BackEnd
-    Renvoie un tuple de mvt ex : (N,3)'''
-
-    inputJoueur=input("Next move : ")
-    if inputJoueur=="Q":
-        BE.saveGame(nomJoueur,labi)
-        Fin.setFin(True)
+def validInput(inputin):
+    '''Return True is the input has a valid form, return False if not'''
+    listDirection=BE.listDirection #("N","S","E","W")
+    listCommands=BE.listCommands #("P","M")
+    if len(inputin)==1 and inputin[0].upper() in listDirection:
         return True
-    while not BE.validInput(inputJoueur):
-        inputJoueur=input("Next move : ")
-    return (inputJoueur[0],int(inputJoueur[1:]))
-
+    if len(inputin) > 1 and inputin[0].upper() in listDirection:
+        try:
+            int(inputin[1:])
+            return True
+        except ValueError:
+            return False
+    if inputin[0].upper() in listCommands:
+        if len(inputin)==2 and inputin[1].upper() in listDirection:
+            return True
+        else:
+            return False
 
 def labi(nomJoueur):
     return BE.Labyrinthe(nomJoueur)
 
-def move(labi,mvt):
-    BE.makeMove(labi,mvt)
-
-def isWin(labi):
-    return labi.getJoueur()==labi.getSortie()
-
-def deleteGame(nomJoueur):
-    BE.deleteGame(nomJoueur)
-
-def uniTest(): #fction de test du  module, jamais appelé
-    nom="Bob"
-    labi=BE.Labyrinthe(nom)
-    print(labi)
-#    print(afficher(labi))
-#    mvt=nextMvt()
-#    print(mvt)
+def move(labi,playerName,mvt):
+    BE.makeMove(labi,playerName,mvt)
 
 
-#uniTest()
